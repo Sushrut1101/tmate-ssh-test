@@ -27,5 +27,5 @@ task:
        - ls -lh
   
   SSH-Setup_script:
-       - sudo apt install tmate ssh ssh-keygen -y
+       - sudo apt install tmate ssh -y
        - tmate
