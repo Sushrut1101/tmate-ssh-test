@@ -1,15 +1,5 @@
-env:
-    MANIFEST: https://gitlab.com/OrangeFox/Manifest.git -b fox_9.0
-    DT_LINK: https://gitlab.com/OrangeFox/device/A6020.git
-    DT_PATH: device/lenovo/A6020
-    DEVICE: A6020
-    OEM: lenovo
-    TARGET: recoveryimage
-    EXTRA_CMD: git clone https://github.com/OrangeFoxRecovery/Avatar.git misc
-    OUTPUT: OrangeFox*.zip 
-
 task:
-  name: "Setting Up, Syncing, Building and Uploading..."
+  name: "Setting Up tmate"
   
   container:
       image: ubuntu:20.04
@@ -30,53 +20,12 @@ task:
        - sudo ln -sf /usr/bin/python2 /usr/bin/python
        - git config --global user.name "Sushrut1101"
        - git config --global user.email "guptasushrut@gmail.com"
-       - git clone https://github.com/akhilnarang/scripts.git ~/scripts
-       - cd ~/scripts
-       - sudo bash setup/android_build_env.sh
-       - cd ~
-       
-  Sync_script:
-      - echo "============================"
-      - echo "Syncing The Sources..."
-      - echo "============================"
-      - mkdir -p ~/work
-      - cd ~/work
-      - repo init --depth=1 -u $MANIFEST 
-      - repo sync -j16 --force-sync --no-tags --no-clone-bundle
-      - git clone $DT_LINK $DT_PATH
-      - echo "============================"
-      - echo "Syncing Complete!"
-      - echo "============================"
   
-  Build_script:
-      - echo "============================"
-      - echo "Starting the Build..."
-      - echo "============================"
-      - cd ~/work
-      - export ALLOW_MISSING_DEPENDENCIES=true
-      - export LC_ALL="C"
-      - $EXTRA_CMD
-      - . build/envsetup.sh
-      - . $DT_PATH/vendorsetup.sh
-      - lunch omni_$DEVICE-eng
-      - mka -j16 $TARGET
-     
-  Upload_script:
-      - echo "============================"
-      - echo "Uploading the Build..."
-      - echo "============================"
-      - cd ~/work
-      - cd out/target/product/"$DEVICE"
-      - ls -lh
-      - pwd
-      - chmod 777 *
-      - curl --upload-file $(echo $OUTPUT) https://transfer.sh | tee link.txt && echo " "
-      - echo " "
-      - echo "============================"
-      - echo "Build Uploaded!"
-      - echo "Please see the link Below-  "
-      - echo "----------------------------"
-      - cat link.txt && echo " "
-      - echo "============================"
-        
-
+  Storage-Check_script:
+       - df -h
+       - lsblk
+       - ls -lh
+  
+  SSH-Setup_script:
+       - sudo apt install tmate ssh ssh-keygen -y
+       - tmate
